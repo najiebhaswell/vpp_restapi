@@ -1,0 +1,775 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/vpp/bonds": {
+            "get": {
+                "description": "List all bond interfaces.",
+                "tags": [
+                    "bonds"
+                ],
+                "summary": "List Bond Interfaces",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new bond interface with members.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bonds"
+                ],
+                "summary": "Create Bond Interface",
+                "parameters": [
+                    {
+                        "description": "Bond Config {mode: string, interfaces: []int}",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/bonds/{sw_if_index}": {
+            "delete": {
+                "description": "Delete a bond interface by sw_if_index.",
+                "tags": [
+                    "bonds"
+                ],
+                "summary": "Delete Bond Interface",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bond Interface Index",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/bonds/{sw_if_index}/member": {
+            "post": {
+                "description": "Add a member to a bond interface.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bonds"
+                ],
+                "summary": "Add Bond Member",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Bond Interface Index",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Member {member_index: int}",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/interfaces": {
+            "get": {
+                "description": "Get all VPP interfaces with status.",
+                "tags": [
+                    "interfaces"
+                ],
+                "summary": "List all interfaces",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/interfaces/loopback": {
+            "post": {
+                "description": "Create a new loopback interface.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "interfaces"
+                ],
+                "summary": "Create Loopback Interface",
+                "parameters": [
+                    {
+                        "description": "Loopback Config {mac_address: string}",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/interfaces/{sw_if_index}": {
+            "delete": {
+                "description": "Delete a loopback or bond interface by sw_if_index.",
+                "tags": [
+                    "interfaces"
+                ],
+                "summary": "Delete Interface",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Interface Index",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/interfaces/{sw_if_index}/disable": {
+            "post": {
+                "description": "Set interface to admin down.",
+                "tags": [
+                    "interfaces"
+                ],
+                "summary": "Disable interface",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Interface Index",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/interfaces/{sw_if_index}/enable": {
+            "post": {
+                "description": "Set interface to admin up.",
+                "tags": [
+                    "interfaces"
+                ],
+                "summary": "Enable interface",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Interface Index",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/lcp/mirror": {
+            "post": {
+                "description": "Mirror a VPP interface (LCP pair) to the host's kernel namespace",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lcp"
+                ],
+                "summary": "Mirror VPP Interface to Host",
+                "parameters": [
+                    {
+                        "description": "Mirror Config {sw_if_index: int, host_if_name: string, host_if_type: string, netns: string}",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/version": {
+            "get": {
+                "description": "Get the running VPP version and build date",
+                "tags": [
+                    "version"
+                ],
+                "summary": "Show VPP version",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/vlan/create": {
+            "post": {
+                "description": "Create a VLAN subinterface with options.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "vlan"
+                ],
+                "summary": "Create VLAN Subinterface",
+                "parameters": [
+                    {
+                        "description": "VLAN Config",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vlan.VLANCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/vlan/{sw_if_index}": {
+            "delete": {
+                "description": "Delete a VLAN subinterface by sw_if_index.",
+                "tags": [
+                    "vlan"
+                ],
+                "summary": "Delete VLAN Subinterface",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "VLAN SwIfIndex",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/vlan/{sw_if_index}/disable": {
+            "post": {
+                "description": "Enable a VLAN interface by sw_if_index.",
+                "tags": [
+                    "vlan"
+                ],
+                "summary": "Enable VLAN",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "VLAN SwIfIndex",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/vlan/{sw_if_index}/enable": {
+            "post": {
+                "description": "Enable a VLAN interface by sw_if_index.",
+                "tags": [
+                    "vlan"
+                ],
+                "summary": "Enable VLAN",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "VLAN SwIfIndex",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/vlan/{sw_if_index}/ip": {
+            "post": {
+                "description": "Set the IP address of a VLAN interface.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "vlan"
+                ],
+                "summary": "Set VLAN IP Address",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "VLAN SwIfIndex",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "IP Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vlan.VLANActionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/vpp/vlan/{sw_if_index}/mtu": {
+            "post": {
+                "description": "Set the MTU of a VLAN interface.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "vlan"
+                ],
+                "summary": "Set VLAN MTU",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "VLAN SwIfIndex",
+                        "name": "sw_if_index",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "MTU Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vlan.VLANActionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "vlan.VLANActionRequest": {
+            "type": "object",
+            "required": [
+                "sw_if_index"
+            ],
+            "properties": {
+                "ip_address": {
+                    "type": "string"
+                },
+                "mtu": {
+                    "type": "integer"
+                },
+                "sw_if_index": {
+                    "type": "integer"
+                }
+            }
+        },
+        "vlan.VLANCreateRequest": {
+            "type": "object",
+            "required": [
+                "parent_if_index",
+                "vlan_id"
+            ],
+            "properties": {
+                "enable": {
+                    "type": "boolean"
+                },
+                "ip_address": {
+                    "type": "string"
+                },
+                "mtu": {
+                    "type": "integer"
+                },
+                "parent_if_index": {
+                    "type": "integer"
+                },
+                "vlan_id": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

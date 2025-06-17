@@ -1,0 +1,525 @@
+definitions:
+  vlan.VLANActionRequest:
+    properties:
+      ip_address:
+        type: string
+      mtu:
+        type: integer
+      sw_if_index:
+        type: integer
+    required:
+    - sw_if_index
+    type: object
+  vlan.VLANCreateRequest:
+    properties:
+      enable:
+        type: boolean
+      ip_address:
+        type: string
+      mtu:
+        type: integer
+      parent_if_index:
+        type: integer
+      vlan_id:
+        type: integer
+    required:
+    - parent_if_index
+    - vlan_id
+    type: object
+info:
+  contact: {}
+paths:
+  /vpp/bonds:
+    get:
+      description: List all bond interfaces.
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List Bond Interfaces
+      tags:
+      - bonds
+    post:
+      consumes:
+      - application/json
+      description: Create a new bond interface with members.
+      parameters:
+      - description: 'Bond Config {mode: string, interfaces: []int}'
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create Bond Interface
+      tags:
+      - bonds
+  /vpp/bonds/{sw_if_index}:
+    delete:
+      description: Delete a bond interface by sw_if_index.
+      parameters:
+      - description: Bond Interface Index
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete Bond Interface
+      tags:
+      - bonds
+  /vpp/bonds/{sw_if_index}/member:
+    post:
+      consumes:
+      - application/json
+      description: Add a member to a bond interface.
+      parameters:
+      - description: Bond Interface Index
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      - description: 'Member {member_index: int}'
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add Bond Member
+      tags:
+      - bonds
+  /vpp/interfaces:
+    get:
+      description: Get all VPP interfaces with status.
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List all interfaces
+      tags:
+      - interfaces
+  /vpp/interfaces/{sw_if_index}:
+    delete:
+      description: Delete a loopback or bond interface by sw_if_index.
+      parameters:
+      - description: Interface Index
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete Interface
+      tags:
+      - interfaces
+  /vpp/interfaces/{sw_if_index}/disable:
+    post:
+      description: Set interface to admin down.
+      parameters:
+      - description: Interface Index
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Disable interface
+      tags:
+      - interfaces
+  /vpp/interfaces/{sw_if_index}/enable:
+    post:
+      description: Set interface to admin up.
+      parameters:
+      - description: Interface Index
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Enable interface
+      tags:
+      - interfaces
+  /vpp/interfaces/loopback:
+    post:
+      consumes:
+      - application/json
+      description: Create a new loopback interface.
+      parameters:
+      - description: 'Loopback Config {mac_address: string}'
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create Loopback Interface
+      tags:
+      - interfaces
+  /vpp/lcp/mirror:
+    post:
+      consumes:
+      - application/json
+      description: Mirror a VPP interface (LCP pair) to the host's kernel namespace
+      parameters:
+      - description: 'Mirror Config {sw_if_index: int, host_if_name: string, host_if_type:
+          string, netns: string}'
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Mirror VPP Interface to Host
+      tags:
+      - lcp
+  /vpp/version:
+    get:
+      description: Get the running VPP version and build date
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show VPP version
+      tags:
+      - version
+  /vpp/vlan/{sw_if_index}:
+    delete:
+      description: Delete a VLAN subinterface by sw_if_index.
+      parameters:
+      - description: VLAN SwIfIndex
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete VLAN Subinterface
+      tags:
+      - vlan
+  /vpp/vlan/{sw_if_index}/disable:
+    post:
+      description: Enable a VLAN interface by sw_if_index.
+      parameters:
+      - description: VLAN SwIfIndex
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Enable VLAN
+      tags:
+      - vlan
+  /vpp/vlan/{sw_if_index}/enable:
+    post:
+      description: Enable a VLAN interface by sw_if_index.
+      parameters:
+      - description: VLAN SwIfIndex
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Enable VLAN
+      tags:
+      - vlan
+  /vpp/vlan/{sw_if_index}/ip:
+    post:
+      consumes:
+      - application/json
+      description: Set the IP address of a VLAN interface.
+      parameters:
+      - description: VLAN SwIfIndex
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      - description: IP Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/vlan.VLANActionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Set VLAN IP Address
+      tags:
+      - vlan
+  /vpp/vlan/{sw_if_index}/mtu:
+    post:
+      consumes:
+      - application/json
+      description: Set the MTU of a VLAN interface.
+      parameters:
+      - description: VLAN SwIfIndex
+        in: path
+        name: sw_if_index
+        required: true
+        type: integer
+      - description: MTU Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/vlan.VLANActionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Set VLAN MTU
+      tags:
+      - vlan
+  /vpp/vlan/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a VLAN subinterface with options.
+      parameters:
+      - description: VLAN Config
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/vlan.VLANCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create VLAN Subinterface
+      tags:
+      - vlan
+swagger: "2.0"
