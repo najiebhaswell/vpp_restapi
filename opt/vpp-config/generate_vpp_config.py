@@ -46,8 +46,30 @@ def build_vpp_config():
         config["interfaces"].append(entry)
     return config
 
+def is_default_config(config):
+    """
+    Cek apakah konfigurasi VPP masih default.
+    - Hanya ada satu interface bernama 'local0'
+    - Atau, semua interface tidak aktif dan tanpa IP (kecuali local0)
+    """
+    interfaces = config.get("interfaces", [])
+    # 1. Hanya ada 'local0'
+    if len(interfaces) == 1 and interfaces[0]["name"] == "local0":
+        return True
+    # 2. Semua interface, selain local0, admin_down dan tanpa IP
+    for iface in interfaces:
+        if iface["name"] != "local0":
+            if iface.get("admin_up", False):
+                return False
+            if iface.get("ip_addresses"):
+                return False
+    return True
+
 def main():
     config = build_vpp_config()
+    if is_default_config(config):
+        print("VPP config is still default, not saving.")
+        return
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w") as f:
         json.dump(config, f, indent=2)
