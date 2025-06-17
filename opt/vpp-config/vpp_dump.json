@@ -1,0 +1,73 @@
+{
+  "interfaces": [
+    {
+      "admin_up": false,
+      "index": 0,
+      "ip_addresses": [],
+      "link_up": false,
+      "mtu": 0,
+      "name": "local0",
+      "type": "local"
+    },
+    {
+      "admin_up": true,
+      "index": 1,
+      "ip_addresses": [],
+      "link_up": true,
+      "mtu": 9000,
+      "name": "BondEthernet0",
+      "type": "unknown"
+    },
+    {
+      "admin_up": true,
+      "index": 2,
+      "ip_addresses": [
+        "1.1.1.1/24"
+      ],
+      "link_up": true,
+      "mtu": 0,
+      "name": "BondEthernet0.1002",
+      "type": "unknown"
+    },
+    {
+      "admin_up": true,
+      "host_if_name": "bond1",
+      "index": 3,
+      "ip_addresses": [],
+      "link_up": true,
+      "mtu": 9000,
+      "name": "BondEthernet1",
+      "type": "unknown"
+    },
+    {
+      "admin_up": true,
+      "host_if_name": "bond1.1999",
+      "index": 4,
+      "ip_addresses": [
+        "2.2.2.2/24"
+      ],
+      "link_up": true,
+      "mtu": 9000,
+      "name": "BondEthernet1.1999",
+      "type": "unknown"
+    },
+    {
+      "admin_up": true,
+      "index": 5,
+      "ip_addresses": [],
+      "link_up": true,
+      "mtu": 9000,
+      "name": "tap0",
+      "type": "unknown"
+    },
+    {
+      "admin_up": true,
+      "index": 6,
+      "ip_addresses": [],
+      "link_up": true,
+      "mtu": 9000,
+      "name": "tap0.1999",
+      "type": "unknown"
+    }
+  ]
+}

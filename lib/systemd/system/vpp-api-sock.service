@@ -1,0 +1,6 @@
+[Unit]
+Description=Restart VPP REST API if VPP API socket changes
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart vpp-restapi.service

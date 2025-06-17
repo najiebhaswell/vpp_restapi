@@ -1,0 +1,11 @@
+[Unit]
+Description=Load VPP configuration after VPP REST API start
+After=vpp-restapi.service
+Requires=vpp-restapi.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/vpp-config/load_vpp_config.py
+
+[Install]
+WantedBy=multi-user.target

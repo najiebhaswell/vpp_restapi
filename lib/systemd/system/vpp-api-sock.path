@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch VPP API Socket
+
+[Path]
+PathChanged=/run/vpp/api.sock
+
+[Install]
+WantedBy=multi-user.target

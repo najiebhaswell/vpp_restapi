@@ -1,0 +1,17 @@
+[Unit]
+Description=VPP REST API Service
+After=network.target vpp.service
+Requires=vpp.service
+
+[Service]
+Type=simple
+User=debian
+WorkingDirectory=/opt/vpp-restapi
+ExecStart=/opt/vpp-restapi/vpp-restapi
+Restart=always
+RestartSec=2
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

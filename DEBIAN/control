@@ -1,0 +1,7 @@
+Package: vpp-restapi
+Version: 1.0.5
+Section: web
+Priority: optional
+Architecture: amd64
+Maintainer: Haswell <maimun.najib@gmedia.id>
+Description: REST API server untuk VPP, berbasis Go.

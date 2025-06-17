@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+
+systemctl daemon-reload
+
+systemctl enable vpp-restapi
+systemctl enable vpp-api-sock.path
+systemctl enable load-vpp-config
+systemctl enable generate-vpp-config.service
+systemctl enable generate-vpp-config.timer
+
+systemctl start vpp-restapi
+systemctl start vpp-api-sock.path
+systemctl start load-vpp-config
+systemctl start generate-vpp-config.timer
+
+exit 0

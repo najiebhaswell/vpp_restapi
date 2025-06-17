@@ -1,0 +1,9 @@
+[Unit]
+Description=Generate VPP config JSON from API
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/vpp-config/generate_vpp_config.py
+
+[Install]
+WantedBy=multi-user.target
