@@ -1,6 +1,21 @@
 #!/bin/sh
 set -e
 
+USER="vpprestapi"
+GROUP="vpprestapi"
+VPPGROUP="vpp"
+
+# Buat user dan group jika belum ada
+if ! id -u "$USER" >/dev/null 2>&1; then
+    echo "Creating system user $USER..."
+    adduser --system --no-create-home --group --disabled-login --shell /usr/sbin/nologin "$USER"
+fi
+
+# Tambahkan user ke group vpp jika belum
+if ! id "$USER" | grep -qw "$VPPGROUP"; then
+    usermod -aG "$VPPGROUP" "$USER"
+fi
+
 systemctl daemon-reload
 
 systemctl enable vpp-restapi

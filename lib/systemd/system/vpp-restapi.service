@@ -5,7 +5,7 @@ Requires=vpp.service
 
 [Service]
 Type=simple
-User=debian
+User=vpprestapi
 WorkingDirectory=/opt/vpp-restapi
 ExecStart=/opt/vpp-restapi/vpp-restapi
 Restart=always
