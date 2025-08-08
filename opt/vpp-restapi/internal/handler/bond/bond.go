@@ -24,7 +24,7 @@ func RegisterRoutes(r gin.IRoutes, vppClient *vppapi.VPPClient) {
 }
 
 // @Summary List Bond Interfaces
-// @Description List all bond interfaces.
+// @Description List all bond interfaces, including member names.
 // @Tags bonds
 // @Success 200 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
@@ -53,14 +53,35 @@ func listBondsHandler(vppClient *vppapi.VPPClient) gin.HandlerFunc {
             if stop {
                 break
             }
+
+            // PATCH: Dump member interfaces for each bond using a new channel
+            memberNames := []string{}
+            memberCh, err := vppClient.NewAPIChannel()
+            if err == nil {
+                memberDump := &vppbond.SwMemberInterfaceDump{SwIfIndex: reply.SwIfIndex}
+                memberDetail := &vppbond.SwMemberInterfaceDetails{}
+                memberCtx := memberCh.SendMultiRequest(memberDump)
+                for {
+                    stopMember, err := memberCtx.ReceiveReply(memberDetail)
+                    if err != nil {
+                        break
+                    }
+                    if stopMember {
+                        break
+                    }
+                    memberNames = append(memberNames, memberDetail.InterfaceName)
+                }
+                memberCh.Close()
+            }
+
             bonds = append(bonds, map[string]interface{}{
                 "index":     uint32(reply.SwIfIndex),
                 "name":      reply.InterfaceName,
                 "mode":      reply.Mode.String(),
                 "lb_algo":   reply.Lb.String(),
-                "admin_up":  nil, // Not available in SwInterfaceBondDetails
-                "link_up":   nil, // Not available in SwInterfaceBondDetails
-                "members":   reply.Slaves,
+                "admin_up":  nil,
+                "link_up":   nil,
+                "members":   memberNames, // PATCH: actual member names
                 "active":    reply.ActiveSlaves,
             })
         }
@@ -289,7 +310,7 @@ func editBondHandler(vppClient *vppapi.VPPClient) gin.HandlerFunc {
         defer ch.Close()
 
         // 1. Dump bond lama
-        oldBond, memberIdxs, err := getBondDetailsAndMembers(ch, uint32(swIfIndex))
+        oldBond, memberIdxs, err := getBondDetailsAndMembers(vppClient, ch, uint32(swIfIndex))
         if err != nil {
             c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get bond details", "details": err.Error()})
             return
@@ -384,7 +405,7 @@ func editBondHandler(vppClient *vppapi.VPPClient) gin.HandlerFunc {
 }
 
 // Helper untuk dump bond detail dan member lama
-func getBondDetailsAndMembers(ch api.Channel, swIfIndex uint32) (*vppbond.SwInterfaceBondDetails, []uint32, error) {
+func getBondDetailsAndMembers(vppClient *vppapi.VPPClient, ch api.Channel, swIfIndex uint32) (*vppbond.SwInterfaceBondDetails, []uint32, error) {
     req := &vppbond.SwInterfaceBondDump{}
     reply := &vppbond.SwInterfaceBondDetails{}
     reqCtx := ch.SendMultiRequest(req)
@@ -407,20 +428,24 @@ func getBondDetailsAndMembers(ch api.Channel, swIfIndex uint32) (*vppbond.SwInte
         return nil, nil, errors.New("bond not found")
     }
 
-    // Dump slave/member index
+    // PATCH: Dump member interface indices for this bond using a new channel
     memberIdxs := []uint32{}
-    memberDump := &vppbond.SwMemberInterfaceDump{SwIfIndex: vppinterface_types.InterfaceIndex(swIfIndex)}
-    memberDetail := &vppbond.SwMemberInterfaceDetails{}
-    memberCtx := ch.SendMultiRequest(memberDump)
-    for {
-        stop, err := memberCtx.ReceiveReply(memberDetail)
-        if err != nil {
-            return nil, nil, err
+    memberCh, err := vppClient.NewAPIChannel()
+    if err == nil {
+        memberDump := &vppbond.SwMemberInterfaceDump{SwIfIndex: vppinterface_types.InterfaceIndex(swIfIndex)}
+        memberDetail := &vppbond.SwMemberInterfaceDetails{}
+        memberCtx := memberCh.SendMultiRequest(memberDump)
+        for {
+            stop, err := memberCtx.ReceiveReply(memberDetail)
+            if err != nil {
+                break
+            }
+            if stop {
+                break
+            }
+            memberIdxs = append(memberIdxs, uint32(memberDetail.SwIfIndex))
         }
-        if stop {
-            break
-        }
-        memberIdxs = append(memberIdxs, uint32(memberDetail.SwIfIndex))
+        memberCh.Close()
     }
     return found, memberIdxs, nil
 }

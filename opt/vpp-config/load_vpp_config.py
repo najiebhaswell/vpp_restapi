@@ -58,6 +58,16 @@ def create_bond(name, mtu):
         raise
     return resp.json().get("sw_if_index")
 
+def add_bond_member(bond_sw_if_index, member_sw_if_index):
+    url = f"{API_URL}/bonds/{bond_sw_if_index}/member"
+    payload = {"member_index": member_sw_if_index}
+    resp = requests.post(url, json=payload, headers=HEADERS)
+    try:
+        resp.raise_for_status()
+    except Exception:
+        print(f"Add member error for bond index {bond_sw_if_index}: {member_sw_if_index} -> {resp.text}")
+        raise
+
 def create_vlan(parent_if_name, vlan_id, mtu, ip=None):
     sw_ifindex_map = get_sw_ifindex_map()
     parent_idx = sw_ifindex_map.get(parent_if_name)
@@ -172,7 +182,23 @@ def main():
                 except Exception as e:
                     print(f"Failed to create bond {name}: {e}")
                 time.sleep(1)
-        # VLAN/Subinterface (for all interface types, skip tap)
+            # Tambah member jika ada di config
+            # Refresh sw_ifindex_map in case bond baru saja dibuat
+            sw_ifindex_map = get_sw_ifindex_map()
+            bond_sw_if_index = sw_ifindex_map.get(name)
+            if bond_sw_if_index and "members" in iface:
+                for member_name in iface["members"]:
+                    member_sw_if_index = sw_ifindex_map.get(member_name)
+                    if member_sw_if_index is None:
+                        print(f"Bond member interface {member_name} not found, skip add-member.")
+                        continue
+                    print(f"Add {member_name} to {name}")
+                    try:
+                        add_bond_member(bond_sw_if_index, member_sw_if_index)
+                    except Exception as e:
+                        print(f"Failed to add member {member_name} to {name}: {e}")
+                    time.sleep(1)
+        # VLAN/Subinterface (untuk semua interface, skip tap)
         if '.' in name and not name.startswith("tap"):
             parent, vlanid = name.split('.', 1)
             if name not in sw_ifindex_map:
